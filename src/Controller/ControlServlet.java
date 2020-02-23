@@ -50,7 +50,6 @@ public class ControlServlet extends HttpServlet {
             case "/insert":
             	user = insertPeople(request, response);
             case "/Home":
-            	
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
