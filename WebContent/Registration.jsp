@@ -72,12 +72,13 @@ background-color: #525252;
 			    			</div>
 			    			
 			    			<input type="submit" value="Register" class="btn btn-info btn-block">
-			    		
+			    		<h4>Already a user<a href = "Login.jsp" class=".alert-link"> Click Here</a></h4>
 			    		</form>
 			    	</div>
 	    		</div>
     		</div>
     	</div>
     </div>
-</body>
+  <!-- Login Section -->
+ </body>
 </html>
