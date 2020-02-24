@@ -66,7 +66,7 @@ public class ControlServlet extends HttpServlet {
             }
             connect = (Connection) DriverManager
   			      .getConnection("jdbc:mysql://127.0.0.1:3306/Adopet?"
-  			          + "user=root&password=23paddock");
+  			          + "user=john&password=Pass1234");
             System.out.println(connect);
         }
     		String sql1 = "DROP DATABASE Adopet";
