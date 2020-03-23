@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 public class UserService extends HttpServlet {
 	private PreparedStatement preparedStatement = null;
+	private static String Search = "Select UserName, Password, FirstName, LastName, Email from user where UserName=? and Password=?";
 	
 	public boolean insert(User people, Connection connect) throws SQLException {
 		String sql = "insert into  user(UserName, Password, FirstName, LastName, Email) values (?, ?, ?, ?, ?)";
@@ -39,5 +40,28 @@ public class UserService extends HttpServlet {
 //        disconnect();
         return rowInserted;
     }
+	
+	public User Login(String UserName, String Password, Connection connect) throws SQLException {
+		System.out.print(UserName + Password + connect);
+	//	String Sear = "Select ? from user where UserName=? and Password=?";
+		preparedStatement = connect.prepareStatement(Search);
+		preparedStatement.setString(1, UserName);
+		preparedStatement.setString(2, Password);
+        if(preparedStatement.execute()) {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			System.out.print(resultSet);
+			while(resultSet.next()) {
+	            String Username = resultSet.getString("UserName");
+	            String password = resultSet.getString("Password");
+	            String FirstName = resultSet.getString("FirstName");
+	            String LastName = resultSet.getString("LastName");
+	            String Email = resultSet.getString("Email");
+	            System.out.print(Username + "1");
+	            User people = new User(Username, password, FirstName, LastName, Email);
+	            return people;
+			}
+        }
+		return null;
+	}
 
 }

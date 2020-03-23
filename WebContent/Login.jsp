@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -37,17 +38,26 @@ background-color: #525252;
 			    		<h3 class="panel-title">Login Adopet</h3>
 			 			</div>
 			 			<div class="panel-body">
-			    		<form role="form" action= "insert" method = "POST">
+			    		<form role="form" action= "Home" method = "POST">
+			    	
 			    			<div class="form-group">
 			    				<input type="text" name="UserName"  id="UserName" class="form-control input-sm" placeholder="User Name">
 			    				</div>
 			    			<div class="form-group">
 			    				<input type="password" name="Password" id="Password" class="form-control input-sm" placeholder="Email Address">
 			    			</div>
+			    			<%String name = (String)request.getAttribute("Message"); %>
+			    			<% if(name != null){%>
+			    			<div align="center" >
+			    			 <font color="red">Invalid UserName or Password</font>
+			    			</div>
+			    			<% }%>
 			    			<input type="submit" value="Login" class="btn btn-info btn-block">
 			    		</form>
 			    	</div>
 	    		</div>
+    </div>
+    </div>
     </div>
   <!-- Login Section -->
  </body>

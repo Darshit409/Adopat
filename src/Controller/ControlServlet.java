@@ -32,6 +32,22 @@ public class ControlServlet extends HttpServlet {
 	private Statement statement = null;
 	private User user;
 	private UserService userService = new UserService();
+	
+	public Connection setUpConnect() throws SQLException {
+		if (connect == null || connect.isClosed()) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                throw new SQLException(e);
+            }
+            connect = (Connection) DriverManager
+  			      .getConnection("jdbc:mysql://127.0.0.1:3306/Adopet?"
+  			          + "user=root&password=23paddock");
+           return connect;
+		}
+		return connect;
+        
+	}
  
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,6 +66,7 @@ public class ControlServlet extends HttpServlet {
             case "/insert":
             	user = insertPeople(request, response);
             case "/Home":
+            	LoginUser(request, response);
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
@@ -57,17 +74,8 @@ public class ControlServlet extends HttpServlet {
     }
 
     private void initialize(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-    	if (connect == null || connect.isClosed()) {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                throw new SQLException(e);
-            }
-            connect = (Connection) DriverManager
-  			      .getConnection("jdbc:mysql://127.0.0.1:3306/Adopet?"
-  			          + "user=root&password=23paddock");
-            System.out.println(connect);
-        }
+    	
+    		connect = setUpConnect();
     		String sql1 = "DROP DATABASE Adopet";
             statement = connect.createStatement();
             statement.executeUpdate(sql1);
@@ -105,5 +113,27 @@ public class ControlServlet extends HttpServlet {
         }
 		return newPeople;
     }
-    }
+    private void LoginUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
 		
+    	String UserName = request.getParameter("UserName");
+    	String Password = request.getParameter("Password");
+    	connect = setUpConnect();
+    	if( connect == null)
+    		System.out.println("Connection incomplete\n");
+     	System.out.print(UserName + "2" + connect);
+    	user = userService.Login(UserName, Password, connect);
+    	if (user == null)
+    	{
+    	//When there is invalid Password or username
+    		String Message = "Invalid UserName or Password";
+    		request.setAttribute("Message",Message);
+    		request.getRequestDispatcher("Login.jsp").forward(request, response);
+             
+    	}
+    	else {
+    	
+		RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
+        dispatcher.forward(request, response);
+    }}
+    }
+	
