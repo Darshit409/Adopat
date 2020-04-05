@@ -4,7 +4,7 @@ package model;
 public class User {
     public int id;
     public String UserName;
-    public String Password;
+    public String Password;v       
     public String FirstName;
     public String LastName;
     public String Email;

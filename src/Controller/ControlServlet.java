@@ -74,15 +74,13 @@ public class ControlServlet extends HttpServlet {
     }
 
     private void initialize(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-    	
-    		connect = setUpConnect();
+    		
+    		connect = setUpConnect();	//Setting the connnection with database
     		String sql1 = "DROP DATABASE Adopet";
             statement = connect.createStatement();
             statement.executeUpdate(sql1);
-            System.out.print("Database Deleted");
             String sql = "CREATE DATABASE Adopet";
             statement.executeUpdate(sql);
-            System.out.print("Database created");
             String User ="CREATE TABLE User " +
                     "(id INTEGER not NULL AUTO_INCREMENT, " +
                     " UserName VARCHAR(255), " + 
@@ -90,10 +88,37 @@ public class ControlServlet extends HttpServlet {
                     " FirstName VARCHAR(255),"+
                     "LastName VARCHAR(255)," +
                     "Email VARCHAR(255),"+
-                    " PRIMARY KEY ( id ))";   
+                    " PRIMARY KEY ( id ))";
+            String pet = "CREATE TABLE pet"+ 
+                    "(petId INTEGER not NULL AUTO_INCREMENT,"+
+            		"petName VARCHAR(255)," +
+            		"species VARCHAR(255)," +
+            		"birthDate VARCHAR(255)," +
+            		"adoptionPrice VARCHAR(255)," +
+            		"userId INTEGER not NULL," + 
+            		" PRIMARY KEY ( petId ), "
+            		+ "FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE)";
+            String petTraits = "CREATE TABLE petTraits"
+            		+ "(id INTEGER not null AUTO_INCREMENT,"
+            		+ "petId INTEGER,"
+            		+ "traits VARCHAR(255),"
+            		+ "PRIMARY KEY( id),"
+            		+ "FOREIGN KEY (petId) REFERENCES pet(petId) ON DELETE CASCADE)";
+            String Reviews = "CREATE TABLE reviews"
+            		+ "(id INTEGER not null AUTO_INCREMENT,"
+            		+ "userId INTEGER,"
+            		+ "petId INTEGER,"
+            		+ "ReviewCategory VARCHAR(255),"
+            		+ "Comment VARCHAR(255),"
+            		+ "PRIMARY KEY (id), "
+            		+ "FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,"
+            		+ "FOREIGN KEY (petId) REFERENCES pet(petId) ON DELETE CASCADE)";
             statement = connect.createStatement();
             statement.executeUpdate("use Adopet;");
             statement.executeUpdate(User);
+            statement.execute(pet);
+            statement.execute(petTraits);
+            statement.execute(Reviews);
             RequestDispatcher dispatcher = request.getRequestDispatcher("Registration.jsp");
             dispatcher.forward(request, response);
             User newPeople = new User("Admin", "pass1234", "Root","User", "Root@wayne.edu");
