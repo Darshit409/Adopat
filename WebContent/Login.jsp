@@ -49,7 +49,7 @@ background-color: #525252;
 			    			<%String name = (String)request.getAttribute("Message"); %>
 			    			<% if(name != null){%>
 			    			<div align="center" >
-			    			 <font color="red">Invalid UserName or Password</font>
+			    			 <font color="red">${ Message }</font>
 			    			</div>
 			    			<% }%>
 			    			<input type="submit" value="Login" class="btn btn-info btn-block">

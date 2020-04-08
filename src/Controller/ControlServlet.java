@@ -12,8 +12,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.User;
+import model.pet;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,8 +33,10 @@ public class ControlServlet extends HttpServlet {
     private Connection connect = null;
 	private Statement statement = null;
 	private User user;
+	private pet Pet;
 	private UserService userService = new UserService();
-	
+	private PetService petService = new PetService();
+	private HttpSession session = null;
 	public Connection setUpConnect() throws SQLException {
 		if (connect == null || connect.isClosed()) {
             try {
@@ -67,13 +71,16 @@ public class ControlServlet extends HttpServlet {
             	user = insertPeople(request, response);
             case "/Home":
             	LoginUser(request, response);
+            case "/petInsert":
+            	LoginPet(request,response);
+            	
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
     }
 
-    private void initialize(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+	private void initialize(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
     		
     		connect = setUpConnect();	//Setting the connnection with database
     		String sql1 = "DROP DATABASE Adopet";
@@ -88,14 +95,15 @@ public class ControlServlet extends HttpServlet {
                     " FirstName VARCHAR(255),"+
                     "LastName VARCHAR(255)," +
                     "Email VARCHAR(255),"+
+                    "petCounts INTEGER not NULL," + 
                     " PRIMARY KEY ( id ))";
             String pet = "CREATE TABLE pet"+ 
                     "(petId INTEGER not NULL AUTO_INCREMENT,"+
             		"petName VARCHAR(255)," +
             		"species VARCHAR(255)," +
             		"birthDate VARCHAR(255)," +
-            		"adoptionPrice VARCHAR(255)," +
-            		"userId INTEGER not NULL," + 
+            		"adoptionPrice INTEGER," +
+            		"userId INTEGER not NULL,"+
             		" PRIMARY KEY ( petId ), "
             		+ "FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE)";
             String petTraits = "CREATE TABLE petTraits"
@@ -131,21 +139,22 @@ public class ControlServlet extends HttpServlet {
         String firstName = request.getParameter("FirstName");
         String LastName = request.getParameter("LastName");
         String Email = request.getParameter("Email");
-        User newPeople = new User(UserName, password, firstName, LastName, Email);
-        if(userService.insert(newPeople, connect)) {
+        user = new User(UserName, password, firstName, LastName, Email);
+        if(userService.insert(user, connect)) {
         	 RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
+        	 session = request.getSession();
+        	 session.setAttribute("UserName", user.UserName);
+        	 request.setAttribute("user", user);
              dispatcher.forward(request, response);
         }
-		return newPeople;
+		return user;
     }
     private void LoginUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
 		
     	String UserName = request.getParameter("UserName");
     	String Password = request.getParameter("Password");
     	connect = setUpConnect();
-    	if( connect == null)
-    		System.out.println("Connection incomplete\n");
-     	System.out.print(UserName + "2" + connect);
+    	if( connect != null)
     	user = userService.Login(UserName, Password, connect);
     	if (user == null)
     	{
@@ -158,7 +167,38 @@ public class ControlServlet extends HttpServlet {
     	else {
     	
 		RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
+		 session = request.getSession();
+    	 session.setAttribute("UserName", user.UserName);
+		request.setAttribute("user",user);
         dispatcher.forward(request, response);
     }}
+    // when pet is registered in an user's account
+    private void LoginPet(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    	connect = setUpConnect();
+		String petName = request.getParameter("petName");
+		String species = request.getParameter("species");
+		String birthDate = request.getParameter("birthDate");
+		int adoptionPrice =Integer.parseInt(request.getParameter("adoptionPrice"));
+		String traits = request.getParameter("traits");
+		System.out.print("retrieving data works   ");
+		String UserName = (String) session.getAttribute("UserName");
+		user = userService.FindByUserName(UserName, connect);
+		if(user.getPetCounts()< 5) {
+			user.incrementPetCounts(user.getPetCounts());
+			userService.IncrementPetCounts(user, connect);
+			Pet = new pet(petName, species, birthDate, adoptionPrice, traits, user.id);
+			if(petService.insert(Pet, connect))
+			{
+				request.setAttribute("success", "The Pet is successfull Registered!");
+				request.getRequestDispatcher("PlacePetForAdoption.jsp").forward(request, response);
+			}
+			
+		}
+		else
+		{
+			request.setAttribute("success", "You can only put opto 5 Animals!");
+			request.getRequestDispatcher("PlacePetForAdoption.jsp").forward(request, response);
+		}
+		} 
     }
 	

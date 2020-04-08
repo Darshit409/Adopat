@@ -4,11 +4,11 @@ package model;
 public class User {
     public int id;
     public String UserName;
-    public String Password;v       
+    public String Password;     
     public String FirstName;
     public String LastName;
     public String Email;
- 
+    public int petCounts; 
     public User(int id) {
         this.id = id;
     }
@@ -63,5 +63,14 @@ public class User {
  
     public void setEmail(String Email) {
         this.Email = Email;
+    }
+    public void setPetCounts(int petCounts) {
+    	this.petCounts = petCounts;
+    }
+    public int getPetCounts() {
+    	return petCounts;
+    }
+    public void incrementPetCounts(int petCounts) {
+    	this.petCounts = petCounts + 1;
     }
 }

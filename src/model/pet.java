@@ -8,21 +8,23 @@ public class pet {
     public int petId;
     public String petName;
     public String species;
-    public Date birthDate;
+    public String birthDate;
     public int adoptionPrice;
-    public String Trait[];
+    public String Traits;
+    public String[] Trait;
     public int userId;
  
     public pet(int id) {
         this.petId = id;
     }
  
-    public pet(String PetName, String species, Date birthDate, int AdoptionPrice, String Trait[], int userId) {
+    public pet(String PetName, String species, String birthDate, int AdoptionPrice, String Traits, int userId){
      	this.petName = PetName;
     	this.species = species;
     	this.birthDate = birthDate;
     	this.adoptionPrice = AdoptionPrice;
-    	this.Trait = Trait;
+    	this.Traits = Traits;
+    	setTrait(Traits);
     	this.userId = userId;}
 	public int getpetId() {
         return petId;
@@ -48,19 +50,19 @@ public class pet {
         this.species = pass;
     }
  
-    public String[] getTraits() {
+    public String[] getTrait() {
         return Trait;
     }
  
-    public void setTrait(String[] Trait) {
-        this.Trait = Trait;
+    public void setTrait(String Traits) {
+       this.Trait = Traits.split("\\W+");
     }
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
  
-    public void setbirthDate(String birthDate) throws ParseException {
-        this.birthDate = new SimpleDateFormat("dd/mm/yyyy").parse(birthDate);
+    public void setbirthDate(String birthDate)  {
+        this.birthDate = birthDate;
     }
     public int getuserID() {
         return userId;
@@ -69,4 +71,10 @@ public class pet {
     public void setUserID(int El) {
         this.userId = El;
     }
+    public int getAdoptionPrice() {
+    	return adoptionPrice;
+    }
+    public void setAdoptionPrice(String price) {
+    	this.adoptionPrice = Integer.parseInt(price);
+    	}
 }
