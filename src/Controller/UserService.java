@@ -34,10 +34,24 @@ public class UserService extends HttpServlet {
 		preparedStatement.setString(4, people.LastName);
 		preparedStatement.setString(5, people.Email);
 		
+		if(checkUserName(people, connect)) {
+			return false;
+		}
         boolean rowInserted = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
 //        disconnect();
         return rowInserted;
     }
+	
+	private boolean checkUserName(User person, Connection connect) throws SQLException {
+		String sql = "SELECT EXISTS(SELECT * FROM user WHERE UserName = (?))";
+		preparedStatement = (PreparedStatement)connect.prepareStatement(sql);
+		preparedStatement.setString(1, person.UserName);
+		System.out.println("Hello");
+		int exists = preparedStatement.executeUpdate();
+		System.out.println(exists);
+		preparedStatement.close();
+		return exists > 0;
+	}
 
 }
