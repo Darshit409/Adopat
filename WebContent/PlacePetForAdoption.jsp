@@ -65,8 +65,8 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">Explore</a></li>
-        <li><a href="#">My Adoptions</a></li>
+        <li><a href="Explore">Explore</a></li>
+        <li><a href="MyAdoptions">My Adoptions</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="Login.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>

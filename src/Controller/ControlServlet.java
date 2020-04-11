@@ -73,12 +73,22 @@ public class ControlServlet extends HttpServlet {
             	LoginUser(request, response);
             case "/petInsert":
             	LoginPet(request,response);
-            	
+            case "/Logout":
+            	response.sendRedirect("Login.jsp");
+            case "/Explore":
+            	listAllPets(request,response);
+            case "/MyAdoptions":
+            	listMyPets(request,response);
+            case "/TraitList":
+            	PetListbyTrait(request, response);
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
     }
+
+
+
 
 	private void initialize(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
     		
@@ -142,8 +152,9 @@ public class ControlServlet extends HttpServlet {
         user = new User(UserName, password, firstName, LastName, Email);
         if(userService.insert(user, connect)) {
         	 RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
-        	 session = request.getSession();
         	 session.setAttribute("UserName", user.UserName);
+        	 session.setAttribute("FirstName", user.FirstName);
+        	 session.setAttribute("LastName", user.LastName);
         	 request.setAttribute("user", user);
              dispatcher.forward(request, response);
         }
@@ -169,6 +180,8 @@ public class ControlServlet extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
 		 session = request.getSession();
     	 session.setAttribute("UserName", user.UserName);
+    	 session.setAttribute("FirstName", user.FirstName);
+    	 session.setAttribute("LastName", user.LastName);
 		request.setAttribute("user",user);
         dispatcher.forward(request, response);
     }}
@@ -200,5 +213,34 @@ public class ControlServlet extends HttpServlet {
 			request.getRequestDispatcher("PlacePetForAdoption.jsp").forward(request, response);
 		}
 		} 
+    
+	private void listAllPets(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();    
+		List<pet> listPeople = petService.printingAllpets(connect);
+		List<String> Traits = petService.petTraitList(connect);
+		session.setAttribute("Traits", Traits);
+		session.setAttribute("AlllistPet", listPeople);
+		request.getRequestDispatcher("Explore.jsp").forward(request, response);
+		
+	}
+
+	private void listMyPets(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		user = userService.FindByUserName((String) session.getAttribute("UserName"), connect);
+		List<pet> listPeople = petService.printingMyPets(connect, user);
+		session.setAttribute("MylistPet", listPeople);
+		request.getRequestDispatcher("MyAdoptions.jsp").forward(request, response);
+	}
+
+
+	private void PetListbyTrait(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		String trait = request.getParameter("Traits");
+		System.out.print(trait);
+		List<pet> listPeople = petService.FindByTraits(connect, trait);
+		request.setAttribute("trait", trait);
+		session.setAttribute("AlllistPet", listPeople);
+		request.getRequestDispatcher("Explore.jsp").forward(request, response);
+	}
     }
 	

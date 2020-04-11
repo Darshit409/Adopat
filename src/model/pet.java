@@ -13,9 +13,17 @@ public class pet {
     public String Traits;
     public String[] Trait;
     public int userId;
- 
+    public String userName;
     public pet(int id) {
         this.petId = id;
+    }
+    
+    public pet(String petName, String species, int AdoptionPrice,int id, String user) {
+    	this.petName = petName;
+    	this.species = species;
+    	this.adoptionPrice = AdoptionPrice;
+    	this.userName = user;
+    	this.userId = id;
     }
  
     public pet(String PetName, String species, String birthDate, int AdoptionPrice, String Traits, int userId){
@@ -25,7 +33,15 @@ public class pet {
     	this.adoptionPrice = AdoptionPrice;
     	this.Traits = Traits;
     	setTrait(Traits);
-    	this.userId = userId;}
+    	this.userId = userId;
+    	}
+	public pet(String PetName, String species, String birthDate, int AdoptionPrice) {
+		this.petName = PetName;
+    	this.species = species;
+    	this.birthDate = birthDate;
+    	this.adoptionPrice = AdoptionPrice;
+	}
+
 	public int getpetId() {
         return petId;
     }
@@ -64,12 +80,16 @@ public class pet {
     public void setbirthDate(String birthDate)  {
         this.birthDate = birthDate;
     }
-    public int getuserID() {
+    public int getuserId() {
         return userId;
     }
  
-    public void setUserID(int El) {
+    public void setUserId(int El) {
         this.userId = El;
+    }
+    public String getuserName()
+    {
+    	return userName;
     }
     public int getAdoptionPrice() {
     	return adoptionPrice;
