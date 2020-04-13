@@ -1,15 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    
+     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Home</title>
+  <title>Favorite pets</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
   <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
     .navbar {
@@ -28,18 +29,19 @@
       height: 100%;
     }
 
+	/*Changing Button color for Submit button*/
+	.btn-dark,
+	.btn-dark:hover{
+		background-color : 	#000000;
+		border_color: 	#000000;}
+	
     /* Set black background color, white text and some padding */
     footer {
       background-color: #555;
       color: white;
       padding: 15px;
     }
-    
-	/*Changing Button color for Submit button*/
-	.btn-dark,
-	.btn-dark:hover{
-		background-color : 	#000000;
-		border_color: 	#000000;}
+
 	
     /* On small screens, set height to 'auto' for sidenav and grid */
     @media screen and (max-width: 767px) {
@@ -49,6 +51,8 @@
       }
       .row.content {height:auto;}
     }
+    
+
   </style>
 </head>
 <body>
@@ -70,7 +74,7 @@
         <li><a href="MyAdoptions">My Adoptions</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="Logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        <li><a href="Login.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
   </div>
@@ -82,15 +86,47 @@
       <p><a href="PlacePetForAdoption.jsp">Place Pet for Adoption</a></p>
       <p><a href="FavoritePet">Favorite pets</a></p>
 	  <p><a href="FavoriteBreeder">Favorite Breeders</a></p>
-      
-    </div>
+	      </div>
     <div class="col-sm-8 text-left">
-      <h1>Welcome ${ FirstName } ${ LastName }</h1>
-	  <h4> Welcome to Home Page of Adopet
-	  </h4>
+      
+      <h1>Favorite Pets</h1>
+	  <h4>Favorite Pets added to the List</h4>
       <hr>
+      <table class = "table table-hover">
+      <thead class = "thead-dark ">
+      <tr>
+      <th scope = "col">#</th>
+      <th scope = "col">Name</th>
+      <th scope = "col">Species</th>
+      <th scope = "col">Breeder</th>
+      <th scope = "col">Price</th>
+      </tr>
+      </thead>
+      <tbody>
+      <c:forEach var = "pet" items = "${petList}" varStatus = "loop">
+      <tr>
+      <th scope = "row">${loop.index + 1}</th>
+      <td><c:out value = "${pet.petName }" /></td>
+      <td><c:out value = "${pet.species }" /></td>
+      <td><a href ="Userinfo?id=${pet.userId} "><c:out value = "${pet.userName }" /></a></td>
+      <td>$ <c:out value = "${pet.adoptionPrice }" /></td>
+      <td><a href = "deletepet?petId=${pet.petId }">Remove from Favroite</a></td>
+      </tr>
+      </c:forEach>
+      </tbody>
+      </table>
+
+
+  
     </div>
   </div>
 </div>
+<script>
+  $(document).on('click', '.feed-id',function(){
+		  var id = $(this).data('id');
+		  $(".modal-body #petId").val( id );
+	  });
+  </script>
+  
 </body>
 </html>

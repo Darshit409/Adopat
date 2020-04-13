@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
   <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
     .navbar {
@@ -119,26 +120,93 @@
       <th scope = "col">Species</th>
       <th scope = "col">Breeder</th>
       <th scope = "col">Price</th>
-
+      <th scope = "col">Review</th>
       </tr>
       </thead>
       <tbody>
       <c:forEach var = "pet" items = "${AlllistPet}" varStatus = "loop">
       <tr>
       <th scope = "row">${loop.index + 1}</th>
-      <td><c:out value = "${pet.petName }" /></td>
+      <td><a href="PetReviewList?petId=${pet.petId }"><c:out value = "${pet.petName }" /></a></td>
       <td><c:out value = "${pet.species }" /></td>
       <td><a href ="Userinfo?id=${pet.userId} "><c:out value = "${pet.userName }" /></a></td>
       <td>$ <c:out value = "${pet.adoptionPrice }" /></td>
-      
+      <td><button class="btn btn-info btn-dark feed-id" data-toggle="modal" data-target="#myModal" data-id = ${ pet.petId } >Give a review</button>
       </tr>
       </c:forEach>
       </tbody>
       </table>
+         <div class="modal fade" id="myModal" role="dialog" >
+    <div class="modal-dialog modal-sm ">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+      <form  action = "EnterReview" method = "GET">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Pet Review</h4>
+        </div>
+        <div class="modal-body">
+		      <input type = "hidden" id="petId" name="petId" value = "" />
+		      <div class="form-group">
+		      <select class="form-control" name = "ReviewCategory" >
+		            <option disabled selected>Select your option</option>
+		  			<option>Totes Adorb</option>
+		  			<option>Adorbs</option>
+		  			<option>Cray</option>
+		  			<option>Cray-Cray</option>
+			  </select>
+			  </div>
+			  <div class = "form-group">
+			  <input class = "form-control"" type = "text" id = "comment" name = "comment" placeholder = "include phrase comment"/>
+		      </div>
+      </div>
+      <div class = "modal-footer">
+          <button class="btn btn-info btn-dark" type = "submit">submit</button>
+          <button type="button" class="btn btn-info btn-dark" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+      </div>
       
+    </div>
+  </div>   
+<%String register = (String)request.getAttribute("register"); %>
+<% if(register != null){%>
+<div class="modal fade" id="myModal2" role="dialog" >
+    <div class="modal-dialog modal-sm ">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">pet Review</h4>
+        </div>
+        <div class="modal-body">
+          <p>${ register }</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default btn-info btn-dark" data-dismiss="modal">Close</button>
+        </div>
+      </div>
       
     </div>
   </div>
+
+<script>
+$("#myModal2").modal("show");
+</script>
+<% }%>
+
+  
+    </div>
+  </div>
 </div>
+<script>
+  $(document).on('click', '.feed-id',function(){
+		  var id = $(this).data('id');
+		  $(".modal-body #petId").val( id );
+	  });
+  </script>
+  
 </body>
 </html>

@@ -81,7 +81,8 @@
   <div class="row content">
     <div class="col-sm-2 sidenav">
       <p><a href="PlacePetForAdoption.jsp">Place Pet for Adoption</a></p>
-      <p><a href="#">Link</a></p>
+      <p><a href="FavoritePet">Favorite pets</a></p>
+	  <p><a href="FavoriteBreeder">Favorite Breeders</a></p>
     </div>
     <div class="col-sm-8 text-left">
       <h1>Welcome ${ FirstName } ${ LastName }</h1>
@@ -95,6 +96,7 @@
       <th scope = "col">Species</th>
       <th scope = "col">BirthDate</th>
       <th scope = "col">Price</th>
+      <th scope = "col">Reviews</th>
       </tr>
       </thead>
       <tbody>
@@ -105,6 +107,7 @@
       <td><c:out value = "${pet.species }" /></td>
       <td><c:out value = "${pet.birthDate }" /></td>
       <td>$ <c:out value = "${pet.adoptionPrice }" /></td>
+      <td><a href="PetReviewList?petId=${pet.petId }">View Reviews</a></td>
       </tr>
       </c:forEach>
       </tbody>

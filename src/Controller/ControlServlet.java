@@ -81,13 +81,30 @@ public class ControlServlet extends HttpServlet {
             	listMyPets(request,response);
             case "/TraitList":
             	PetListbyTrait(request, response);
+            case "/EnterReview":
+            	writeReview(request,response);
+            case "/PetReviewList":
+            	petReviewList(request, response);
+            case "/Userinfo":
+            	UserInfo(request, response);
+            case "/addpet":
+            	addFavoritePet(request, response);
+            case "/adduser":
+            	addFavoriteUser(request, response);
+            case "/FavoritePet":
+            	FavoritePet(request, response);
+            case "/FavoriteBreeder":
+            	FavoriteUser(request, response);
+            case "/deletepet":
+            	deleteFavoritePet(request,response);
+            case "/deleteuser":
+            	deleteFavoriteUser(request, response);
+         
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
     }
-
-
 
 
 	private void initialize(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
@@ -131,12 +148,28 @@ public class ControlServlet extends HttpServlet {
             		+ "PRIMARY KEY (id), "
             		+ "FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,"
             		+ "FOREIGN KEY (petId) REFERENCES pet(petId) ON DELETE CASCADE)";
+            String favoritePets = "CREATE TABLE favroitePets"
+            		+ "(id INTEGER not null AUTO_INCREMENT,"
+            		+ " petId INTEGER,"
+            		+ "userId INTEGER,"
+            		+ "PRIMARY KEY (id),"
+            		+ "FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,"
+            		+ "FOREIGN KEY (petId) REFERENCES pet(petId) ON DELETE CASCADE)";
+            String favoriteUser = "CREATE TABLE favroiteUser"
+            		+ "(id INTEGER not null AUTO_INCREMENT,"
+            		+ " userId INTEGER,"
+            		+ "FavUserId INTEGER,"
+            		+ "PRIMARY KEY (id),"
+            		+ "FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,"
+            		+ "FOREIGN KEY (FavUserId) REFERENCES User(id) ON DELETE CASCADE)";
             statement = connect.createStatement();
             statement.executeUpdate("use Adopet;");
             statement.executeUpdate(User);
             statement.execute(pet);
             statement.execute(petTraits);
             statement.execute(Reviews);
+            statement.execute(favoritePets);
+            statement.execute(favoriteUser);
             RequestDispatcher dispatcher = request.getRequestDispatcher("Registration.jsp");
             dispatcher.forward(request, response);
             User newPeople = new User("Admin", "pass1234", "Root","User", "Root@wayne.edu");
@@ -144,6 +177,7 @@ public class ControlServlet extends HttpServlet {
 		}
     private User insertPeople(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
+    	connect = setUpConnect();
         String UserName = request.getParameter("UserName");
         String password = request.getParameter("Password");
         String firstName = request.getParameter("FirstName");
@@ -152,7 +186,9 @@ public class ControlServlet extends HttpServlet {
         user = new User(UserName, password, firstName, LastName, Email);
         if(userService.insert(user, connect)) {
         	 RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
-        	 session.setAttribute("UserName", user.UserName);
+        	 System.out.print(user.UserName);
+        	 session = request.getSession();
+        	 session.setAttribute("UserName", user.getUserName());
         	 session.setAttribute("FirstName", user.FirstName);
         	 session.setAttribute("LastName", user.LastName);
         	 request.setAttribute("user", user);
@@ -160,6 +196,7 @@ public class ControlServlet extends HttpServlet {
         }
 		return user;
     }
+    
     private void LoginUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
 		
     	String UserName = request.getParameter("UserName");
@@ -232,7 +269,6 @@ public class ControlServlet extends HttpServlet {
 		request.getRequestDispatcher("MyAdoptions.jsp").forward(request, response);
 	}
 
-
 	private void PetListbyTrait(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
 		connect = setUpConnect();
 		String trait = request.getParameter("Traits");
@@ -242,5 +278,122 @@ public class ControlServlet extends HttpServlet {
 		session.setAttribute("AlllistPet", listPeople);
 		request.getRequestDispatcher("Explore.jsp").forward(request, response);
 	}
+
+	private void petReviewList(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		int petId = Integer.parseInt(request.getParameter("petId"));
+		Pet = petService.FindByPetId(connect, petId);
+		List<pet> listPeople = petService.findPetReviewBypetID(connect, petId);
+		System.out.print(listPeople);
+		session.setAttribute("petList", listPeople);
+		session.setAttribute("pet", Pet);
+		request.getRequestDispatcher("PetDetail.jsp").forward(request, response);
+
+	}
+
+	private void writeReview(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		String userName = (String) session.getAttribute("UserName");
+		user = userService.FindByUserName(userName, connect);
+		int petId = Integer.parseInt(request.getParameter("petId"));
+		String ReviewCategory = request.getParameter("ReviewCategory");
+		String comment = request.getParameter("comment");
+		if(petService.insertReview(connect, petId, ReviewCategory, comment, user)) {
+			request.setAttribute("register", "The Review is successfull Entered!");
+			request.getRequestDispatcher("Explore.jsp").forward(request, response);
+		}
+		
+		
+	}
+	private void UserInfo(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		int userId = Integer.parseInt(request.getParameter("id"));
+		System.out.print("user Info loading");
+		user = userService.findById(connect, userId);
+		session.setAttribute("user", user);
+		 RequestDispatcher dispatcher = request.getRequestDispatcher("UserDetail.jsp");
+         dispatcher.forward(request, response);
+	}
+	private void FavoriteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		String userName = (String) session.getAttribute("UserName");
+		user = userService.FindByUserName(userName, connect);
+		List<User> favList = userService.FavUserList(connect, user.getId());
+		request.setAttribute("userList", favList);
+		request.getRequestDispatcher("FavUserList.jsp").forward(request, response);
+		}
+
+	private void FavoritePet(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		String userName = (String) session.getAttribute("UserName");
+		user = userService.FindByUserName(userName, connect);
+		List <pet> favList = petService.FavPetList(connect, user.getId());
+		request.setAttribute("petList", favList);
+		request.getRequestDispatcher("FavPetList.jsp").forward(request, response);
+		}
+	private void addFavoritePet(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		int petId = Integer.parseInt(request.getParameter("petId"));
+		String message;
+		String userName = (String) session.getAttribute("UserName");
+		user = userService.FindByUserName(userName, connect);
+		if(userService.InsertPetFav(connect, petId, user.getId())) {
+			message = "Pet is succesfully added to Favorites";
+		}
+		else {
+			message = "Pet already exists in favorites";
+		}
+		request.setAttribute("message", message);
+		request.getRequestDispatcher("PetDetail.jsp").forward(request, response);
+
+		}
+	private void addFavoriteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+	int userId = Integer.parseInt(request.getParameter("userId"));
+	String message;
+	String userName = (String) session.getAttribute("UserName");
+	user = userService.FindByUserName(userName, connect);
+	if(userService.InsertUserFav(connect, user.getId(), userId)) {
+		message = "Breeder is succesfully added to Favorites";
+	}
+	else {
+		message = "Breeder already exists in favorites";
+	}
+	request.setAttribute("message", message);
+	request.getRequestDispatcher("UserDetail.jsp").forward(request, response);
+
+	}
+
+	private void deleteFavoritePet(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+	int petId = Integer.parseInt(request.getParameter("petId"));
+	String message;
+	String userName = (String) session.getAttribute("UserName");
+	user = userService.FindByUserName(userName, connect);
+	if(petService.DeletePetFav(connect, petId, user.getId())) {
+		message = "Pet is succesfully Deleted from Favorites";
+	}
+	else {
+		message = "Pet does not exists in favorites";
+	}
+	request.setAttribute("message", message);
+	request.getRequestDispatcher("FavoritePet").forward(request, response);
+
+	}
+	private void deleteFavoriteUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+	int userId = Integer.parseInt(request.getParameter("userId"));
+	String message;
+	String userName = (String) session.getAttribute("UserName");
+	user = userService.FindByUserName(userName, connect);
+	if(petService.DeleteUserFav(connect, user.getId(), userId)) {
+		message = "Breeder is succesfully Deleted from Favorites";
+	}
+	else {
+		message = "Breeder does not exists in favorites";
+	}
+	request.setAttribute("message", message);
+	request.getRequestDispatcher("FavoriteBreeder").forward(request, response);
+
+	}
+
+
+
+
+
+
+
     }
 	

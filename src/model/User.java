@@ -19,6 +19,9 @@ public class User {
     	this.FirstName = firstName2;
     	this.LastName = lastName2;
     	this.Email = email2;	}
+	public User() {
+	}
+
 	public int getId() {
         return id;
     }

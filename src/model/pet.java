@@ -14,11 +14,14 @@ public class pet {
     public String[] Trait;
     public int userId;
     public String userName;
+    public String ReviewCategory;
+    public String Comment;
     public pet(int id) {
         this.petId = id;
     }
-    
-    public pet(String petName, String species, int AdoptionPrice,int id, String user) {
+    public pet() {}
+    public pet(int petId, String petName, String species, int AdoptionPrice,int id, String user) {
+    	this.petId = petId;
     	this.petName = petName;
     	this.species = species;
     	this.adoptionPrice = AdoptionPrice;
@@ -35,7 +38,8 @@ public class pet {
     	setTrait(Traits);
     	this.userId = userId;
     	}
-	public pet(String PetName, String species, String birthDate, int AdoptionPrice) {
+	public pet(int petId, String PetName, String species, String birthDate, int AdoptionPrice) {
+		this.petId = petId;
 		this.petName = PetName;
     	this.species = species;
     	this.birthDate = birthDate;
@@ -54,7 +58,7 @@ public class pet {
         return petName;
     }
  
-    public void setUserName(String name) {
+    public void setpetName(String name) {
         this.petName = name;
     }
  
@@ -87,6 +91,9 @@ public class pet {
     public void setUserId(int El) {
         this.userId = El;
     }
+    public void setuserName(String name) {
+    	this.userName = name;
+    }
     public String getuserName()
     {
     	return userName;
@@ -97,4 +104,20 @@ public class pet {
     public void setAdoptionPrice(String price) {
     	this.adoptionPrice = Integer.parseInt(price);
     	}
+    public String getReviewCategory() {
+        return ReviewCategory;
+    }
+ 
+    public void setReviewCategory(String name) {
+        this.ReviewCategory = name;
+        
+    }
+    public String getComment() {
+        return Comment;
+    }
+ 
+    public void setComment(String name) {
+        this.Comment = name;
+        
+    }
 }

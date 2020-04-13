@@ -79,7 +79,8 @@
   <div class="row content">
     <div class="col-sm-2 sidenav">
       <p><a href="PlacePetForAdoption.jsp">Place Pet for Adoption</a></p>
-      <p><a href="#">Link</a></p>
+      <p><a href="FavoritePet">Favorite pets</a></p>
+	  <p><a href="FavoriteBreeder">Favorite Breeders</a></p>
     </div>
     <div class="col-sm-8 text-left">
 	  <h4> Place Pet For Adoption
@@ -126,7 +127,7 @@
           <p>${ success }</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default btn-dark" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-info btn-dark" data-dismiss="modal">Close</button>
         </div>
       </div>
       

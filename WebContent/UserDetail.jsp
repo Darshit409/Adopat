@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    
+   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Home</title>
+  <title>Pet Detail</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -82,13 +82,61 @@
       <p><a href="PlacePetForAdoption.jsp">Place Pet for Adoption</a></p>
       <p><a href="FavoritePet">Favorite pets</a></p>
 	  <p><a href="FavoriteBreeder">Favorite Breeders</a></p>
-      
     </div>
     <div class="col-sm-8 text-left">
-      <h1>Welcome ${ FirstName } ${ LastName }</h1>
-	  <h4> Welcome to Home Page of Adopet
+      <h1>Breeder Detail</h1>
+	  <h4> Following are pet Details and reviews
 	  </h4>
       <hr>
+      <div class = "row">
+	      <div class = "col-sm-4">
+	      	<h3>First Name: ${user.getFirstName() }</h3>
+	      </div>
+	      <div class = "col-sm-4">
+	      	<h3>Last Name: ${ user.getLastName() }</h3>
+	      </div>
+	      <div class = "col-sm-4">
+	      <a href = "adduser?userId=${user.getId() }" class="btn btn-info btn-dark">Add to Favroite</a>
+	      </div>
+      </div>
+      <div class = "row">
+	      <div class = "col-sm-4">
+	      	<h3>User Name:  ${user.getUserName() }</h3>
+	      </div>
+	      <div class = "col-sm-4">
+	      	<h3>Email: ${ user.getEmail() }</h3>
+	      </div>
+	      <div class = "col-sm-4">
+	      </div>
+      </div>
+      <hr>
+<%String name = (String)request.getAttribute("message"); %>
+<% if(name != null){%>
+<div class="modal fade" id="myModal" role="dialog" >
+    <div class="modal-dialog modal-sm ">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Alert!</h4>
+        </div>
+        <div class="modal-body">
+          <p>${ message }</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info btn-dark" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+<script>
+$("#myModal").modal("show");
+</script>
+<% }%>
+      
     </div>
   </div>
 </div>
