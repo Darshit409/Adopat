@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.JDBCType;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
  
 import javax.servlet.RequestDispatcher;
@@ -46,7 +47,7 @@ public class ControlServlet extends HttpServlet {
             }
             connect = (Connection) DriverManager
   			      .getConnection("jdbc:mysql://127.0.0.1:3306/Adopet?"
-  			          + "user=root&password=23paddock");
+  			          + "user=john&password=Pass1234");
            return connect;
 		}
 		return connect;
@@ -99,7 +100,8 @@ public class ControlServlet extends HttpServlet {
             	deleteFavoritePet(request,response);
             case "/deleteuser":
             	deleteFavoriteUser(request, response);
-         
+            case "/TopReviewers":
+            	listTopReviewers(request, response);
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
@@ -387,6 +389,15 @@ public class ControlServlet extends HttpServlet {
 	request.setAttribute("message", message);
 	request.getRequestDispatcher("FavoriteBreeder").forward(request, response);
 
+	}
+	
+	private void listTopReviewers(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException
+	{
+		connect = setUpConnect();
+		List<User> listTopReviewsUser = userService.topReviewers(connect);
+		request.setAttribute("listTopReviewsUser", listTopReviewsUser);       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("ListUsersMostReviews.jsp");       
+        dispatcher.forward(request, response);
 	}
 
 

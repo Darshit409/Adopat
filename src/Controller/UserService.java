@@ -174,4 +174,23 @@ public class UserService {
 		resultSet.close();
 		return userList;
 	}
+	public List<User> topReviewers(Connection connect) throws SQLException 
+	{
+		List<User> topReviewList = new ArrayList();
+		String sql = "Select user.*, reviews.userId, count(reviews.userId) from reviews, user where user.id = reviews.userId group by reviews.userId order by count(reviews.userId) desc";
+		preparedStatement = (PreparedStatement)connect.prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+			String Username = resultSet.getString("UserName");
+            String password = resultSet.getString("Password");
+            String FirstName = resultSet.getString("FirstName");
+            String LastName = resultSet.getString("LastName");
+            String Email = resultSet.getString("Email");
+            User people = new User(Username, password, FirstName, LastName, Email);
+            people.setReviewCount(resultSet.getInt("count(reviews.userId)"));
+            topReviewList.add(people);
+		}
+		resultSet.close();
+		return topReviewList;
+	}
 }

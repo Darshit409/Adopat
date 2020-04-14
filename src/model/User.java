@@ -9,6 +9,7 @@ public class User {
     public String LastName;
     public String Email;
     public int petCounts; 
+    public int reviewCount;
     public User(int id) {
         this.id = id;
     }
@@ -75,5 +76,12 @@ public class User {
     }
     public void incrementPetCounts(int petCounts) {
     	this.petCounts = petCounts + 1;
+    }
+    public int getReviewCount() {
+    	return reviewCount;
+    }
+    public void setReviewCount(int count)
+    {
+    	this.reviewCount = count;
     }
 }
