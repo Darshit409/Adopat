@@ -232,4 +232,95 @@ public class UserService {
 		resultSet.close();
 		return userList;
 	}
+	public List<User> petNoCrayCray(Connection connect) throws SQLException{
+		List <User> userList = new ArrayList<User>();
+		String petNoCrayCray = "Select * from user where user.id not in (Select distinct userId from pet where"
+				+ " petId in ( select reviews.petId from reviews where reviews.ReviewCategory = ?)) and user.petCounts > 0";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(petNoCrayCray);
+		preparedStatement.setString(1, "cray-cray");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+            String Username = resultSet.getString("UserName");
+            String password = resultSet.getString("Password");
+            String FirstName = resultSet.getString("FirstName");
+            String LastName = resultSet.getString("LastName");
+            String Email = resultSet.getString("Email");
+            User people = new User(Username, password, FirstName, LastName, Email);
+            people.setId(resultSet.getInt("id"));
+            people.setPetCounts(resultSet.getInt("petCounts"));
+            userList.add(people);
+		}
+		resultSet.close();
+		return userList;
+	}
+	public List<User> GoodUser(Connection connect) throws SQLException{
+		String GoodUser = "Select * from user where user.id not in (select Distinct reviews.userId"
+				+ " from reviews where reviews.ReviewCategory = ? or reviews.ReviewCategory = ?)";
+		List <User> userList = new ArrayList<User>();
+		preparedStatement = (PreparedStatement) connect.prepareStatement(GoodUser);
+		preparedStatement.setString(1, "cray-cray");
+		preparedStatement.setString(2, "Cray");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+            String Username = resultSet.getString("UserName");
+            String password = resultSet.getString("Password");
+            String FirstName = resultSet.getString("FirstName");
+            String LastName = resultSet.getString("LastName");
+            String Email = resultSet.getString("Email");
+            User people = new User(Username, password, FirstName, LastName, Email);
+            people.setId(resultSet.getInt("id"));
+            people.setPetCounts(resultSet.getInt("petCounts"));
+            userList.add(people);
+		}
+		resultSet.close();
+		return userList;
+	
+	}
+
+	public List<User> UserWithGreatPets(Connection connect) throws SQLException {
+		String UserWithGreatPets = "Select user.*, pet.petName, reviews.petId from reviews, pet, user where"
+				+ " reviews.ReviewCategory = ? and pet.petId = reviews.petId and user.id"
+				+ " = pet.userId group by petId having count(*)>1";
+		List <User> userList = new ArrayList<User>();
+		preparedStatement = (PreparedStatement) connect.prepareStatement(UserWithGreatPets);
+		preparedStatement.setString(1, "Totes Adorb");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+            String Username = resultSet.getString("UserName");
+            String password = resultSet.getString("Password");
+            String FirstName = resultSet.getString("FirstName");
+            String LastName = resultSet.getString("LastName");
+            String Email = resultSet.getString("Email");
+            User people = new User(Username, password, FirstName, LastName, Email);
+            people.setId(resultSet.getInt("id"));
+            people.setPetCounts(resultSet.getInt("petCounts"));
+            people.setpetId(resultSet.getInt("petId"));
+            people.setpetName(resultSet.getString("petName"));
+            userList.add(people);
+		}
+		resultSet.close();
+		return userList;
+	}
+	public List<User> UserWithNoGreatPets(Connection connect) throws SQLException {
+		String UserWithGreatPets = "Select user.* from user where user.id not in "
+				+ "(Select pet.userId from pet where petId in (Select reviews.petId from reviews"
+				+ " where reviews.ReviewCategory = ? group by petId having count(*)>1))";
+		List <User> userList = new ArrayList<User>();
+		preparedStatement = (PreparedStatement) connect.prepareStatement(UserWithGreatPets);
+		preparedStatement.setString(1, "Totes Adorb");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+            String Username = resultSet.getString("UserName");
+            String password = resultSet.getString("Password");
+            String FirstName = resultSet.getString("FirstName");
+            String LastName = resultSet.getString("LastName");
+            String Email = resultSet.getString("Email");
+            User people = new User(Username, password, FirstName, LastName, Email);
+            people.setId(resultSet.getInt("id"));
+            people.setPetCounts(resultSet.getInt("petCounts"));
+            userList.add(people);
+		}
+		resultSet.close();
+		return userList;
+	}
 }

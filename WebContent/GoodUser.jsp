@@ -86,7 +86,7 @@
     </div>
     <div class="col-sm-8 text-left">
       <h1>Filtered Users</h1>
-	  <h4> Breeders who have never entered Cray-Cray as review cate
+	  <h4> Breeders who have pets, but none of the pets have recieved Cray-Cray review!
 	  </h4>
       <hr>
       <table class = "table table-hover">
@@ -100,7 +100,7 @@
       </tr>
       </thead>
       <tbody>
-      <c:forEach var = "user" items = "${CrayCrayList}" varStatus = "loop">
+      <c:forEach var = "user" items = "${GoodUserList}" varStatus = "loop">
       <tr>
       <th scope = "row">${loop.index + 1}</th>
       <td><c:out value = "${user.getUserName() }" /></td>

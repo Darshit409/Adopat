@@ -107,6 +107,12 @@ public class ControlServlet extends HttpServlet {
             	AddToCart(request,response);
             case "/CrayCrayReviewExceptions":
             	CrayCrayExceptions(request, response);
+            case "/NoCrayCrayReviewExceptions":
+            	NoCrayCrayExceptions(request, response);
+            case "/goodUser":
+            	GoodUser(request, response);
+            case "/UserWithGreatPets":
+            	UserWithGreatPets(request, response);
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
@@ -115,10 +121,33 @@ public class ControlServlet extends HttpServlet {
 
 
 
+	private void UserWithGreatPets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		connect = setUpConnect();
+		List<User> userList = userService.UserWithGreatPets(connect);
+		List<User> userList2 = userService.UserWithNoGreatPets(connect);
+		request.setAttribute("GoodUserList", userList);
+		request.setAttribute("GoodUserList2", userList2);
+		request.getRequestDispatcher("UserWithGreatPet.jsp").forward(request, response);
+	}
+
+	private void GoodUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		connect = setUpConnect();
+		List<User> userList = userService.GoodUser(connect);
+		request.setAttribute("GoodUserList", userList);
+		request.getRequestDispatcher("GoodUser.jsp").forward(request, response);
+	}
+
+	private void NoCrayCrayExceptions(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		List<User> userList = userService.petNoCrayCray(connect);
+		request.setAttribute("NoCrayCrayList", userList);
+		request.getRequestDispatcher("NoCrayCray.jsp").forward(request, response);
+	}
+
 	private void CrayCrayExceptions(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
 		connect = setUpConnect();
 		List<User> userList = userService.CrayCrayExceptions(connect);
-		request.setAttribute("userList", userList);
+		request.setAttribute("CrayCrayList", userList);
 		request.getRequestDispatcher("CrayCray.jsp").forward(request, response);
 	}
 

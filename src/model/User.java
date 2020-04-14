@@ -8,7 +8,9 @@ public class User {
     public String FirstName;
     public String LastName;
     public String Email;
-    public int petCounts; 
+    public int petCounts;
+    public String petName;
+    public int petId;
     public User(int id) {
         this.id = id;
     }
@@ -75,5 +77,17 @@ public class User {
     }
     public void incrementPetCounts(int petCounts) {
     	this.petCounts = petCounts + 1;
+    }
+    public void setpetName(String petCounts) {
+    	this.petName = petCounts;
+    }
+    public String getpetName() {
+    	return petName;
+    }
+    public void setpetId(int petCounts) {
+    	this.petId = petCounts;
+    }
+    public int getpetId() {
+    	return petId;
     }
 }
