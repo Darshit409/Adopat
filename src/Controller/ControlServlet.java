@@ -48,6 +48,9 @@ public class ControlServlet extends HttpServlet {
             connect = (Connection) DriverManager
 <<<<<<< Updated upstream
   			      .getConnection("jdbc:mysql://127.0.0.1:3306/Adopet?"
+=======
+  			      .getConnection("jdbc:mysql://localhost/Adopet?"
+>>>>>>> Stashed changes
   			          + "user=john&password=Pass1234");
            return connect;
 		}
