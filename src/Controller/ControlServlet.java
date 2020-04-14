@@ -46,6 +46,7 @@ public class ControlServlet extends HttpServlet {
                 throw new SQLException(e);
             }
             connect = (Connection) DriverManager
+<<<<<<< Updated upstream
   			      .getConnection("jdbc:mysql://127.0.0.1:3306/Adopet?"
   			          + "user=john&password=Pass1234");
            return connect;
