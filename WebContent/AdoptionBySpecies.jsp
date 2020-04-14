@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+         <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,7 +34,7 @@
       color: white;
       padding: 15px;
     }
-	
+    
 	/*Changing Button color for Submit button*/
 	.btn-dark,
 	.btn-dark:hover{
@@ -64,13 +65,12 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
+        <li class="active"><a href="Home.jsp">Home</a></li>
         <li><a href="Explore">Explore</a></li>
         <li><a href="MyAdoptions">My Adoptions</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-      	<li><a href = "addCart"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
-        <li><a href="Login.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        <li><a href="Logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
   </div>
@@ -82,63 +82,60 @@
       <p><a href="PlacePetForAdoption.jsp">Place Pet for Adoption</a></p>
       <p><a href="FavoritePet">Favorite pets</a></p>
 	  <p><a href="FavoriteBreeder">Favorite Breeders</a></p>
-    </div>
-    <div class="col-sm-8 text-left">
-	  <h4> Place Pet For Adoption
-	  </h4>
-      <hr>
-      <form role="form" action = "petInsert" method = "POST">
-    <div class="form-group">
-      <label for="exampleFormControlInput1">Name</label>
-      <input type= "text" class="form-control" id="petName" name = "petName" placeHolder = "Enter pet Name">
-    </div>
-    <div class="form-group">
-      <label for="exampleFormControlInput1">Species</label>
-      <input type= "text" class="form-control" id="species" name = "species" placeHolder = "Enter pet's species">
-    </div>
-  <div class="form-group">
-    <label for="exampleFormControlInput1">Date of Birth</label>
-    <input type= "date" class="form-control" id="birthDate" name = "birthDate" placeHolder = "mm/dd/yyyy" >
-  </div>
-  <div class="form-group">
-    <label for="exampleFormControlInput1">Price For Adoption</label>
-    <input type= "number" class="form-control" id="adoptionPrice" name= "adoptionPrice" placeHolder = "00.00">
-  </div>
-  <div class="form-group">
-    <label for="exampleFormControlTextarea1">Traits</label>
-    <textarea class="form-control" id="traits" name = "traits" rows="3" placeHolder = "Enter some Traits seperated by space or commas"></textarea>
-  </div>
-  <div class = "form_group">
-  <button type = "submit" class = "btn btn-info btn-block btn-dark" data-toggle="modal" data-target="#myModal">Submit</button>
-  </div>
-</form>
-
-<%String name = (String)request.getAttribute("success"); %>
-<% if(name != null){%>
-<div class="modal fade" id="myModal" role="dialog" >
-    <div class="modal-dialog modal-sm ">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Pet Registration</h4>
-        </div>
-        <div class="modal-body">
-          <p>${ success }</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-info btn-dark" data-dismiss="modal">Close</button>
-        </div>
-      </div>
       
     </div>
+    <div class="col-sm-8 text-left">
+      <h1>Adoption  By Species</h1>
+	  <h4> Enter two Species, which will give you Breeders who have pet of both Species for Adoption
+	  </h4>
+      <hr>
+      <form action = "AdoptionBySpecies" method = "get">
+      <div class = "row">
+      	<div class = "col-sm-4">
+      	<select class="form-control" name = "species1" >
+      		<option disabled selected>Select your option</option>
+      		<c:forEach var = "T" items = "${speciesList}" varStatus = "loop">
+      			<option>${ T }</option>
+      		</c:forEach>
+      	</select>
+      	</div>
+      	<div class = "col-sm-4">
+      	<select class="form-control" name = "species2" >
+      		<option disabled selected>Select your option</option>
+      		<c:forEach var = "T" items = "${speciesList}" varStatus = "loop">
+      			<option>${ T }</option>
+      		</c:forEach>
+      	</select>
+      	</div>
+      	<div class = "col-sm-4">
+      	<button type = "submit" class = "btn btn-info btn-dark">submit</button>
+      	</div>
+      </div>
+      </form>
+      <table class = "table table-hover">
+      <thead class = "thead-dark ">
+      <tr>
+      <th scope = "col">#</th>
+      <th scope = "col">UserId</th>
+      <th scope = "col">Email</th>
+      <th scope = "col">Full Name</th>
+      <th scope = "col">Pets For Adoption</th>
+      </tr>
+      </thead>
+      <tbody>
+      <c:forEach var = "user" items = "${userList}" varStatus = "loop">
+      <tr>
+      <th scope = "row">${loop.index + 1}</th>
+      <td><c:out value = "${user.getUserName() }" /></td>
+      <td><c:out value = "${user.getEmail() }" /></td>
+      <td><a href ="Userinfo?id=${user.id} "><c:out value = "${user.getFirstName() }" />  <c:out value = "${user.getLastName() }" /></a></td>
+      <td><c:out value = "${user.getPetCounts() }" /></td>
+      </tr>
+      </c:forEach>
+      </tbody>
+      </table>
+    </div>
   </div>
-
-<script>
-$("#myModal").modal("show");
-</script>
-<% }%>
+</div>
 </body>
 </html>
-

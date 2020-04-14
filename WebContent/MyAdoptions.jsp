@@ -71,6 +71,7 @@
         <li><a href="MyAdoptions">My Adoptions</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+      	<li><a href = "addCart"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
         <li><a href="Login.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>

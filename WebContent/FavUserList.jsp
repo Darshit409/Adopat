@@ -74,6 +74,7 @@
         <li><a href="MyAdoptions">My Adoptions</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+      	<li><a href = "addCart"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
         <li><a href="Login.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
@@ -103,7 +104,7 @@
       </tr>
       </thead>
       <tbody>
-      <c:forEach var = "user" items = "${userList}" varStatus = "loop">
+      <c:forEach var = "user" items = "${CrayCrayList}" varStatus = "loop">
       <tr>
       <th scope = "row">${loop.index + 1}</th>
       <td><c:out value = "${user.getUserName() }" /></td>

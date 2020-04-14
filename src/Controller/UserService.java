@@ -30,7 +30,10 @@ public class UserService {
 
 	
 	public boolean insert(User people, Connection connect) throws SQLException {
+		boolean rowInserted = false;
 		String sql = "insert into  user(UserName, Password, FirstName, LastName, Email, petCounts) values (?, ?, ?, ?, ?, ?)";
+		User newPeople = FindByUserName(people.getUserName(), connect);
+		if(newPeople == null) {
 		preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
 		preparedStatement.setString(1,  people.UserName);
 		preparedStatement.setString(2, people.Password);
@@ -38,13 +41,13 @@ public class UserService {
 		preparedStatement.setString(4, people.LastName);
 		preparedStatement.setString(5, people.Email);
 		preparedStatement.setInt(6, 0);
-        boolean rowInserted = preparedStatement.executeUpdate() > 0;
+        rowInserted = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
+		}
         return rowInserted;
     }
 	
 	public User Login(String UserName, String Password, Connection connect) throws SQLException {
-	//	String Sear = "Select ? from user where UserName=? and Password=?";
 		preparedStatement = connect.prepareStatement(Search);
 		preparedStatement.setString(1, UserName);
 		preparedStatement.setString(2, Password);
@@ -159,6 +162,61 @@ public class UserService {
 				+ "in (select favroiteuser.FavUserId from favroiteuser where favroiteuser.userId = ?)";
 		preparedStatement = (PreparedStatement) connect.prepareStatement(FavUserList);
 		preparedStatement.setInt(1, id);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+            String Username = resultSet.getString("UserName");
+            String password = resultSet.getString("Password");
+            String FirstName = resultSet.getString("FirstName");
+            String LastName = resultSet.getString("LastName");
+            String Email = resultSet.getString("Email");
+            User people = new User(Username, password, FirstName, LastName, Email);
+            people.setId(resultSet.getInt("id"));
+            people.setPetCounts(resultSet.getInt("petCounts"));
+            userList.add(people);
+		}
+		resultSet.close();
+		return userList;
+	}
+
+	public List<User> FindUserBy2Species(Connection connect, String species1, String species2) throws SQLException {
+		List <User> userList = new ArrayList<User>();
+		String FindUserBy2Species = "Select * from user where user.id in (Select pet.userId from pet"
+				+ " where pet.userId IN (Select pet.userId from pet where pet.species = ?) and "
+				+ "pet.species = ?)";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(FindUserBy2Species);
+		preparedStatement.setString(1, species1);
+		preparedStatement.setString(2, species2);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+			 String Username = resultSet.getString("UserName");
+	            String password = resultSet.getString("Password");
+	            String FirstName = resultSet.getString("FirstName");
+	            String LastName = resultSet.getString("LastName");
+	            String Email = resultSet.getString("Email");
+	            User people = new User(Username, password, FirstName, LastName, Email);
+	            people.setId(resultSet.getInt("id"));
+	            people.setPetCounts(resultSet.getInt("petCounts"));
+	            userList.add(people);
+			}
+			resultSet.close();
+			return userList;
+	}
+
+	public void AddToCart(Connection connect, String petId, int id) throws SQLException {
+		int petID = Integer.parseInt(petId);
+		String AddToCart = "Insert into cart(petID, userId) Values (?, ?)";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(AddToCart);
+		preparedStatement.setInt(1, petID);
+		preparedStatement.setInt(2, id);
+		preparedStatement.executeUpdate();
+	}
+
+	public List<User> CrayCrayExceptions(Connection connect) throws SQLException {
+		List <User> userList = new ArrayList<User>();
+		String CrayCrayExceptions = "select * from user where user.id not in (select reviews.userId "
+				+ " from reviews where reviews.ReviewCategory = ?)";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(CrayCrayExceptions);
+		preparedStatement.setString(1, "Cray-Cray");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		while(resultSet.next()) {
             String Username = resultSet.getString("UserName");

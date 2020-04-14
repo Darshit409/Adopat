@@ -70,6 +70,12 @@ background-color: #525252;
 			    					</div>
 			    				</div>
 			    			</div>
+			    			<%String name = (String)request.getAttribute("Message"); %>
+			    			<% if(name != null){%>
+			    			<div class = "row" align="center" >
+			    			 <font color="red">${ Message }</font>
+			    			</div>
+			    			<% }%>
 			    			
 			    			<input type="submit" value="Register" class="btn btn-info btn-block">
 			    		<h4>Already a user<a href = "Login.jsp" class=".alert-link"> Click Here</a></h4>

@@ -206,6 +206,56 @@ public class PetService {
 				return false;
 		}
 	}
+	public List<String> SpeciesList(Connection connect) throws SQLException {
+		String SpeciesList = "Select distinct species from pet";
+		List <String> speciesList = new ArrayList<String>(); 
+		preparedStatement = (PreparedStatement) connect.prepareStatement(SpeciesList);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+			speciesList.add(resultSet.getString("species"));
+		}
+		resultSet.close();
+		return speciesList;
+	}
+	public List<pet> printCart(Connection connect, int id) throws SQLException {
+		String printCart = "Select pet.petId, pet.petName,pet.species, pet.adoptionPrice, user.FirstName, "
+				+ "pet.userId, user.LastName from pet, user where pet.petId in (select cart.petId from cart "
+				+ "where userId = ?) and user.id = pet.userId";
+		List <pet> cartList = new ArrayList<pet>(); 
+		preparedStatement = (PreparedStatement) connect.prepareStatement(printCart);
+		preparedStatement.setInt(1, id);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+			String name = resultSet.getString("FirstName") +"  " + resultSet.getString("LastName");
+			
+			pet newPet = new pet(resultSet.getInt("petId"),resultSet.getString("petName"),resultSet.getString("species"),resultSet.getInt("adoptionPrice"),resultSet.getInt("userId"), name);
+			cartList.add(newPet);
+		}
+		resultSet.close();
+		return cartList;
+		
+	}
+	public List<Integer> PrintpetIdInCart(Connection connect, int id) throws SQLException {
+		List<Integer> IdList = new ArrayList<Integer>();
+		String PrintpetIdInCart = "Select Distinct petId from cart where userId = ?";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(PrintpetIdInCart);
+		preparedStatement.setInt(1, id);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+			IdList.add(resultSet.getInt("petId"));
+		}
+		resultSet.close();
+		return IdList;
+	}
+	public void DeletePet(Connection connect, List<Integer> idList) throws SQLException {
+		String DeletePet = "Delete from pet where petId = ?";
+		for(int i = 0; i < idList.size(); i++) {
+			int petId = idList.get(i);
+			preparedStatement = (PreparedStatement) connect.prepareStatement(DeletePet);
+			preparedStatement.setInt(1, petId);
+			preparedStatement.executeUpdate();
+		}
+	}
 }
 
 

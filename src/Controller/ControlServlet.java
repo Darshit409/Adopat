@@ -67,6 +67,8 @@ public class ControlServlet extends HttpServlet {
             case "/initialize":
          initialize(request, response);
                 break;
+            case "/AdoptPet":
+            	DeletePet(request,response);
             case "/insert":
             	user = insertPeople(request, response);
             case "/Home":
@@ -99,13 +101,39 @@ public class ControlServlet extends HttpServlet {
             	deleteFavoritePet(request,response);
             case "/deleteuser":
             	deleteFavoriteUser(request, response);
-         
+            case "/AdoptionBySpecies":
+            	AdoptionBySpecies(request, response);
+            case "/addCart":
+            	AddToCart(request,response);
+            case "/CrayCrayReviewExceptions":
+            	CrayCrayExceptions(request, response);
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
     }
 
+
+
+	private void CrayCrayExceptions(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		List<User> userList = userService.CrayCrayExceptions(connect);
+		request.setAttribute("userList", userList);
+		request.getRequestDispatcher("CrayCray.jsp").forward(request, response);
+	}
+
+	private void AddToCart(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		String petId = request.getParameter("petId");
+		String userName = (String) session.getAttribute("UserName");
+		user = userService.FindByUserName(userName, connect);
+		if(petId != null) {
+			userService.AddToCart(connect, petId, user.getId());
+		}
+		List<pet> petList = petService.printCart(connect, user.getId());
+		session.setAttribute("AlllistPet", petList);
+		request.getRequestDispatcher("Cart.jsp").forward(request, response);
+	}
 
 	private void initialize(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
     		
@@ -162,6 +190,13 @@ public class ControlServlet extends HttpServlet {
             		+ "PRIMARY KEY (id),"
             		+ "FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,"
             		+ "FOREIGN KEY (FavUserId) REFERENCES User(id) ON DELETE CASCADE)";
+            String cart = "CREATE TABLE cart"
+            		+ "(id INTEGER not null auto_increment,"
+            		+ " userId INTEGER,"
+            		+ " petId INTEGER,"
+            		+ "PRIMARY KEY (id),"
+            		+ " FOREIGN KEY (petId) REFERENCES pet(petId) ON DELETE CASCADE,"
+            		+ " FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE)";
             statement = connect.createStatement();
             statement.executeUpdate("use Adopet;");
             statement.executeUpdate(User);
@@ -170,6 +205,7 @@ public class ControlServlet extends HttpServlet {
             statement.execute(Reviews);
             statement.execute(favoritePets);
             statement.execute(favoriteUser);
+            statement.execute(cart);
             RequestDispatcher dispatcher = request.getRequestDispatcher("Registration.jsp");
             dispatcher.forward(request, response);
             User newPeople = new User("Admin", "pass1234", "Root","User", "Root@wayne.edu");
@@ -193,6 +229,12 @@ public class ControlServlet extends HttpServlet {
         	 session.setAttribute("LastName", user.LastName);
         	 request.setAttribute("user", user);
              dispatcher.forward(request, response);
+        }
+        else
+        {
+        String Message = "UserName Already Exists";
+		request.setAttribute("Message",Message);
+		request.getRequestDispatcher("Registration.jsp").forward(request, response);
         }
 		return user;
     }
@@ -221,7 +263,9 @@ public class ControlServlet extends HttpServlet {
     	 session.setAttribute("LastName", user.LastName);
 		request.setAttribute("user",user);
         dispatcher.forward(request, response);
-    }}
+    }
+    	
+    }
     // when pet is registered in an user's account
     private void LoginPet(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
     	connect = setUpConnect();
@@ -388,7 +432,35 @@ public class ControlServlet extends HttpServlet {
 	request.getRequestDispatcher("FavoriteBreeder").forward(request, response);
 
 	}
+	private void AdoptionBySpecies(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		List <User> userList = null;
+		String species1 = (String)request.getParameter("species1");
+		String species2 = request.getParameter("species2");
+		if(species1!= null && species2 != null) {
+			userList = userService.FindUserBy2Species(connect, species1, species2);
+			System.out.print("This runs");
+			session.setAttribute("userList", userList);	
+		}
+		else {
+			session.setAttribute("userList", userList);	
+		}
+		List <String> speciesList = petService.SpeciesList(connect);
+		request.setAttribute("speciesList", speciesList);
+		request.getRequestDispatcher("AdoptionBySpecies.jsp").forward(request, response);
+		
+	}
 
+	private void DeletePet(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		String userName = (String) session.getAttribute("UserName");
+		user = userService.FindByUserName(userName, connect);
+		List<Integer> IdList = petService.PrintpetIdInCart(connect, user.getId());
+		petService.DeletePet(connect, IdList);		
+		System.out.print("delete is working");
+		request.getRequestDispatcher("addCart").forward(request, response);
+
+	}
 
 
 

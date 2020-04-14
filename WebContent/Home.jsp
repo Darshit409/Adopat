@@ -70,7 +70,8 @@
         <li><a href="MyAdoptions">My Adoptions</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="Logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      	<li><a href = "addCart"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
+        <li><a href="Login.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
   </div>
@@ -82,12 +83,13 @@
       <p><a href="PlacePetForAdoption.jsp">Place Pet for Adoption</a></p>
       <p><a href="FavoritePet">Favorite pets</a></p>
 	  <p><a href="FavoriteBreeder">Favorite Breeders</a></p>
+	  <p><a href = "AdoptionBySpecies">Adoption By Species</a></p>
+	  <p><a href = "CrayCrayReviewExceptions">Breeders not posted Cray_cray review</a></p>
       
     </div>
     <div class="col-sm-8 text-left">
       <h1>Welcome ${ FirstName } ${ LastName }</h1>
-	  <h4> Welcome to Home Page of Adopet
-	  </h4>
+	  <h4> Welcome to Home Page of Adopet</h4>
       <hr>
     </div>
   </div>

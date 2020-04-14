@@ -70,6 +70,7 @@
         <li><a href="MyAdoptions">My Adoptions</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+      	<li><a href = "addCart"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
         <li><a href="Logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
@@ -107,6 +108,7 @@
 	      	<h3>Birth Date: ${ pet.birthDate}</h3>
 	      </div>
 	      <div class = "col-sm-4">
+	      <a href = "addCart?petId=${pet.petId }" class="btn btn-info btn-dark">Add to Crate</a>
 	      </div>
       </div>
       <hr>
