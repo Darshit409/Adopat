@@ -86,27 +86,27 @@
     </div>
     <div class="col-sm-8 text-left">
       <h1>Filtered Users</h1>
-	  <h4> Breeders who have never entered Cray-Cray as review rating
+	  <h4> Pets with just Good Reviews!
 	  </h4>
       <hr>
       <table class = "table table-hover">
       <thead class = "thead-dark ">
       <tr>
       <th scope = "col">#</th>
-      <th scope = "col">UserId</th>
-      <th scope = "col">Email</th>
-      <th scope = "col">Full Name</th>
-      <th scope = "col">Pets For Adoption</th>
+      <th scope = "col">Name</th>
+      <th scope = "col">Species</th>
+      <th scope = "col">Breeder</th>
+      <th scope = "col">Price</th>
       </tr>
       </thead>
       <tbody>
-      <c:forEach var = "user" items = "${CrayCrayList}" varStatus = "loop">
+      <c:forEach var = "pet" items = "${GoodPets}" varStatus = "loop">
       <tr>
       <th scope = "row">${loop.index + 1}</th>
-      <td><c:out value = "${user.getUserName() }" /></td>
-      <td><c:out value = "${user.getEmail() }" /></td>
-      <td><a href ="Userinfo?id=${user.id} "><c:out value = "${user.getFirstName() }" />  <c:out value = "${user.getLastName() }" /></a></td>
-      <td><c:out value = "${user.getPetCounts() }" /></td>
+      <td><a href="PetReviewList?petId=${pet.petId }"><c:out value = "${pet.petName }" /></a></td>
+      <td><c:out value = "${pet.species }" /></td>
+      <td><a href ="Userinfo?id=${pet.userId} "><c:out value = "${pet.userName }" /></a></td>
+      <td>$ <c:out value = "${pet.adoptionPrice }" /></td>
       </tr>
       </c:forEach>
       </tbody>

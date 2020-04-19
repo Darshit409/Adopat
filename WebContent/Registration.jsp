@@ -55,13 +55,13 @@ background-color: #525252;
 			    			</div>
 
 			    			<div class="form-group">
-			    				<input type="email" name="Email" id="email" value = "${user.Email}" class="form-control input-sm" placeholder="Email Address">
+			    				<input type="email" name="Email" id="email"  class="form-control input-sm" placeholder="Email Address">
 			    			</div>
 
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="password" name="Password" id="password" value = "${user.Password}" class="form-control input-sm" placeholder="Password">
+			    						<input type="password" name="Password" id="password" class="form-control input-sm" placeholder="Password">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">

@@ -84,6 +84,9 @@
       <p><a href="FavoritePet">Favorite pets</a></p>
 	  <p><a href="FavoriteBreeder">Favorite Breeders</a></p>
 	  <p><a href = "AdoptionBySpecies">Adoption By Species</a></p>
+	  <p><a href ="TopReviewers">Top Reviewers</a></p>
+	  <p><a href = "CommonFavPets">Common Pets in Favorites</a></p>
+	  <p><a href = "GoodPets">Good Reviews Pets</a></p>
 	  <p><a href = "CrayCrayReviewExceptions">Breeders not posted Cray_cray review</a></p>
       <p><a href = "NoCrayCrayReviewExceptions">Breeder's pet with no Cray_cray review</a></p>
       <p><a href = "goodUser">Breeder with no bad reviews</a></p>

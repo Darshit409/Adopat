@@ -11,6 +11,7 @@ public class User {
     public int petCounts;
     public String petName;
     public int petId;
+    public int reviewCount;
     public User(int id) {
         this.id = id;
     }
@@ -89,5 +90,12 @@ public class User {
     }
     public int getpetId() {
     	return petId;
+    }
+    public int getReviewCount() {
+    	return reviewCount;
+    }
+    public void setReviewCount(int count)
+    {
+    	this.reviewCount = count;
     }
 }

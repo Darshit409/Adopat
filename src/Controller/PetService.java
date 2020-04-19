@@ -256,7 +256,50 @@ public class PetService {
 			preparedStatement.executeUpdate();
 		}
 	}
+	public List<pet> printingCommonFavPet(Connection connect, int userId) throws SQLException{
+		List<pet> favpet = new ArrayList<pet>();
+		String printingCommonFavPet = "Select user.id, user.FirstName, user.LastName, pet.petId, pet.petName,"
+				+ " pet.species, pet.adoptionPrice from pet, user, favroitepets where favroitepets.petId in"
+				+ " (select favroitepets.petId from favroitepets where favroitepets.userId = ?) and favroitepets"
+				+ ".userId <> ? and favroitepets.petId = pet.petId and favroitepets.userId = user.id;";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(printingCommonFavPet);
+		preparedStatement.setInt(1, userId);
+		preparedStatement.setInt(2, userId);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+			pet newPet = new pet();
+			newPet.setId(resultSet.getInt("petId"));
+			newPet.setUserId(resultSet.getInt("id"));
+			newPet.setuserName(resultSet.getString("FirstName") + " " + resultSet.getString("LastName"));
+			newPet.setpetName(resultSet.getString("petName"));
+			newPet.setAdoptionPrice(resultSet.getString("adoptionPrice"));
+			newPet.setSpecies(resultSet.getString("species"));
+			favpet.add(newPet);
+		}
+		resultSet.close();
+		return favpet;
+		
+	}
+	public List<pet> GoodPets(Connection connect, int id) throws SQLException {
+		List<pet> favpet = new ArrayList<pet>();
+		String GoodPets = "Select pet.*, user.FirstName, user.LastName from pet, user where petId not in (select reviews.petId from reviews"
+				+ " where reviews.ReviewCategory= ? or reviews.ReviewCategory= ?)"
+				+ " and petId in (select petId from reviews) and pet.userId <> ?  and user.id = pet.userId";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(GoodPets);
+		preparedStatement.setString(1, "Cray");
+		preparedStatement.setString(2, "Cray-Cray");
+		preparedStatement.setInt(3,id);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while(resultSet.next()) {
+			String name = resultSet.getString("FirstName") +"  " + resultSet.getString("LastName");
+			pet newPet = new pet(resultSet.getInt("petId"),resultSet.getString("petName"),resultSet.getString("species"),resultSet.getInt("adoptionPrice"),resultSet.getInt("userId"), name);
+			favpet.add(newPet);
+		}
+		resultSet.close();
+		return favpet;
+	}
 }
+
 
 
 

@@ -113,13 +113,45 @@ public class ControlServlet extends HttpServlet {
             	GoodUser(request, response);
             case "/UserWithGreatPets":
             	UserWithGreatPets(request, response);
+            case "/CommonFavPets":
+            	commonFabPets(request, response);
+            case "/GoodPets":
+            	GoodPets(request, response);
+            case "/TopReviewers":
+            	listTopReviewers(request, response);
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
     }
 
+    private void listTopReviewers(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException
+	{
+		connect = setUpConnect();
+		List<User> listTopReviewsUser = userService.topReviewers(connect);
+		request.setAttribute("listTopReviewsUser", listTopReviewsUser);       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("ListUsersMostReviews.jsp");       
+        dispatcher.forward(request, response);
+	}
 
+	private void GoodPets(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		String userName = (String) session.getAttribute("UserName");
+		user = userService.FindByUserName(userName, connect);
+		List<pet> FavPet = petService.GoodPets(connect, user.id);
+		request.setAttribute("GoodPets", FavPet);
+		request.getRequestDispatcher("GoodPets.jsp").forward(request, response);
+	}
+
+	private void commonFabPets(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+		connect = setUpConnect();
+		String userName = (String) session.getAttribute("UserName");
+		user = userService.FindByUserName(userName, connect);
+		List<pet> FavPet = petService.printingCommonFavPet(connect, user.id);
+		request.setAttribute("CommonFavPet", FavPet);
+		request.getRequestDispatcher("CommonFavPets.jsp").forward(request, response);
+
+	}
 
 	private void UserWithGreatPets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		connect = setUpConnect();
